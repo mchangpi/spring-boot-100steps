@@ -5,6 +5,6 @@
 	</head>
 	<body>
 		Welcome to My Learn Page, ${name} !
-		<div>password (should not display): ${password}</div> 
+		<!--<div>password (should not display): ${password}</div>-->
 	</body>
 </html>
