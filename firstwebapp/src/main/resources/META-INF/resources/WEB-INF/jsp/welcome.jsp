@@ -4,7 +4,7 @@
 		<title> My Welcome Page - JSP</title>
 	</head>
 	<body>
-		Welcome to My Learn Page, ${name} !
+		Welcome to Milton Learn Spring Page, ${name} !
 		<!--<div>password (should not display): ${password}</div>-->
 	</body>
 </html>

@@ -3,7 +3,7 @@
 		<title> My Login Page - JSP</title>
 	</head>
 	<body>
-		Welcome to Login page with JSP
+		Welcome to Milton Learn Spring Login page 
 		<pre>${errorMessage}</pre>
 		<form method="post">
 			Name: <input type="text" name="name" value="milton">
