@@ -1,9 +1,10 @@
 <html>
 	<head>
-		<title> My Login Page - JSP</title>
+		<title>Todos Login Page</title>
 	</head>
 	<body>
-		Welcome to Milton Learn Spring Login page 
+		<div>Welcome to Milton Learn Spring Page, Please log in:</div>
+		<hr>
 		<pre>${errorMessage}</pre>
 		<form method="post">
 			Name: <input type="text" name="name" value="Milton">
