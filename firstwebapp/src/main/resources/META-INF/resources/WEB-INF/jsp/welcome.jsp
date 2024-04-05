@@ -5,6 +5,6 @@
 	</head>
 	<body>
 		Welcome to Milton Learn Spring Page, ${name} !
-		<!--<div>password (should not display): ${password}</div>-->
+		<div><a href="list-todos">Manage your Todos</a></div>
 	</body>
 </html>
