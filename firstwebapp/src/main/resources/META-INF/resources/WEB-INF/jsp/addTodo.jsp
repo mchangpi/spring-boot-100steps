@@ -19,9 +19,9 @@
 
       <form method="post" >
         Description:
-        <input type="text" path="description" required="required" />
-        <input type="hidden" path="id" />
-        <input type="hidden" path="done" />
+        <input type="text" name="description" />
+        <input type="hidden" name="id" />
+        <input type="hidden" name="done" />
         <input type="submit" class="btn btn-success" />
       </form>
       <!--
