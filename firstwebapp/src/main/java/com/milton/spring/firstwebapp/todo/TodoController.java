@@ -44,26 +44,41 @@ public class TodoController {
     return "addTodo";
   }
 
-  // POST
+  /* POST
+   * @ModelAttribute: populate the todo with data from a form submitted to
+   * "add-todo" endpoint.
+   * 
+   * @Valid: validate todo, which is 2-way binding 
+   * 
+   * https://stackoverflow.com/questions/2860756/spring-3-mvc-formerrors-not-
+   * showing-the-errors
+   */
   @RequestMapping(value = "add-todo", method = RequestMethod.POST)
-  public String postAddTodo(ModelMap model,
-      /* @Valid: validate newTodo, which is 2-way binding */
-      /* @ModelAttribute: populate the newTodo with data from a form submitted to "add-todo" endpoint. */
-      /* https://stackoverflow.com/questions/2860756/spring-3-mvc-formerrors-not-showing-the-errors */
-      @ModelAttribute("newTodo") @Valid Todo newTodo, BindingResult validationResult) {
+  public String postAddTodo(@ModelAttribute("newTodo") @Valid Todo todo,
+      BindingResult validationResult, ModelMap model) {
 
     if (validationResult.hasErrors()) {
       validationResult.getAllErrors().forEach(e -> {
-        if (e instanceof FieldError)
-          System.out.println(
-              ((FieldError) e).getField() + " ,error: " + ((FieldError) e).getDefaultMessage());
+        if (e instanceof FieldError) {
+          FieldError fieldErr = ((FieldError) e);
+          System.out.println("field: " + fieldErr.getField() + ", err: " + fieldErr.getDefaultMessage());
+        }
       });
 
+      System.out.println("desc: " + todo.getDescription());
+      
       return "addTodo";
     }
-    
+
     todoService.addTodo(
-        model.get("name").toString(), newTodo.getDescription(), LocalDate.now().plusYears(1), false);
+        model.get("name").toString(), todo.getDescription(), LocalDate.now().plusYears(1), false);
+
+    return "redirect:list-todos";
+  }
+
+  @RequestMapping("delete-todo")
+  public String deleteTodo(@RequestParam int id) {
+    todoService.deleteById(id);
 
     return "redirect:list-todos";
   }
