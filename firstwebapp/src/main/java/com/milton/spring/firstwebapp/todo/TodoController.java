@@ -33,15 +33,15 @@ public class TodoController {
   @RequestMapping(value = "add-todo", method = RequestMethod.GET)
   public String getAddTodo(ModelMap model) {
     String username = (String) model.get("name"); // from session
-//    Todo todo = new Todo(0, username, "Default Desc", LocalDate.now().plusYears(1), false);
-//    model.put("todo", todo);
+    Todo todo = new Todo(0, username, "Default Desc", LocalDate.now().plusYears(1), false);
+    model.put("newTodo", todo); /* 2-way binding */
     return "addTodo";
   }
 
   // POST
   @RequestMapping(value = "add-todo", method = RequestMethod.POST)
-  public String postAddTodo(@RequestParam String description, ModelMap model) {
-    todoService.addTodo(model.get("name").toString(), description, 
+  public String postAddTodo(ModelMap model, Todo newTodo /* 2-way binding */) {
+    todoService.addTodo(model.get("name").toString(), newTodo.getDescription(), 
         LocalDate.now().plusYears(1), false);
     
     return "redirect:list-todos";
