@@ -19,11 +19,12 @@
       <h1>Enter Todo Details:</h1>
 
       <form:form method="post" modelAttribute="newTodo">
-        Description:
-        <form:input type="text" path="description" required="required" />
+        Description: <form:input type="text" path="description" required="required" />
         <form:input type="hidden" path="id" />
         <form:input type="hidden" path="done" />
         <input type="submit" class="btn btn-success" />
+        <br/>
+        <form:errors path="description" cssClass="text-danger"/>
       </form:form>
       <script src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
       <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
