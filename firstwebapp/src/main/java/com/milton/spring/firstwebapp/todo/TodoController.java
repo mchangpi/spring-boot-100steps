@@ -56,8 +56,8 @@ public class TodoController {
    * showing-the-errors
    */
   @RequestMapping(value = "add-todo", method = RequestMethod.POST)
-  public String postAddTodo(@ModelAttribute("newTodo") @Valid Todo todo, BindingResult validationResult,
-      ModelMap model) {
+  public String postAddTodo(@ModelAttribute("newTodo") @Valid Todo todo, 
+      BindingResult validationResult, ModelMap model) {
 
     if (validationResult.hasErrors()) {
       validationResult.getAllErrors().forEach(e -> {
