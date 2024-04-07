@@ -43,10 +43,10 @@ public class TodoService {
     return todo;
   }
 
-  public Todo updateTodo(@Valid Todo updateTodo) {
-    todos.stream().filter(t -> t.getId() == updateTodo.getId())
-        .forEach(t -> t.setDescription(updateTodo.getDescription()));
-
-    return findById(updateTodo.getId());
+  public void updateTodo(@Valid Todo updateTodo) {
+    todos.stream().filter(t -> t.getId() == updateTodo.getId()).forEach(t -> {
+      t.setDescription(updateTodo.getDescription());
+      t.setTargetDate(updateTodo.getTargetDate());
+    });
   }
 }

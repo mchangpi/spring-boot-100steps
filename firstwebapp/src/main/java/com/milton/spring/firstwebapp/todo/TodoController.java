@@ -72,7 +72,8 @@ public class TodoController {
       return "addTodo";
     }
 
-    todoService.addTodo(model.get("name").toString(), todo.getDescription(), LocalDate.now().plusYears(1), false);
+    todoService.addTodo(
+        model.get("name").toString(), todo.getDescription(), todo.getTargetDate(), false);
 
     return "redirect:list-todos";
   }
@@ -94,14 +95,13 @@ public class TodoController {
 
   @RequestMapping(value = "update-todo", method = RequestMethod.POST)
   public String updateTodo(@ModelAttribute("newTodo") @Valid Todo todo,
-      BindingResult validationResult, ModelMap model) {
+      BindingResult validationResult) {
     if (validationResult.hasErrors()) {
       return "addTodo";
     }
 
-    System.out.println("updated desc: " + todo.getDescription());
+    System.out.println("updated desc: " + todo.getDescription() + ", date: "+ todo.getTargetDate());
 
-    // todo.setUsername(model.get("name").toString());
     todoService.updateTodo(todo);
 
     return "redirect:list-todos";
