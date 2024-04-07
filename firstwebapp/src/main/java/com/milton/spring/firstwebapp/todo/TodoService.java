@@ -7,6 +7,8 @@ import java.util.function.Predicate;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
+
 @Service
 public class TodoService {
 
@@ -35,4 +37,16 @@ public class TodoService {
     todos.removeIf(predicate);
   }
 
+  public Todo findById(int id) {
+    Predicate<? super Todo> predicate = todo -> todo.getId() == id;
+    Todo todo = todos.stream().filter(predicate).findFirst().get();
+    return todo;
+  }
+
+  public Todo updateTodo(@Valid Todo updateTodo) {
+    todos.stream().filter(t -> t.getId() == updateTodo.getId())
+        .forEach(t -> t.setDescription(updateTodo.getDescription()));
+
+    return findById(updateTodo.getId());
+  }
 }

@@ -44,18 +44,20 @@ public class TodoController {
     return "addTodo";
   }
 
-  /* POST
+  /*
+   * POST
+   * 
    * @ModelAttribute: populate the todo with data from a form submitted to
    * "add-todo" endpoint.
    * 
-   * @Valid: validate todo, which is 2-way binding 
+   * @Valid: validate todo, which is 2-way binding
    * 
    * https://stackoverflow.com/questions/2860756/spring-3-mvc-formerrors-not-
    * showing-the-errors
    */
   @RequestMapping(value = "add-todo", method = RequestMethod.POST)
-  public String postAddTodo(@ModelAttribute("newTodo") @Valid Todo todo,
-      BindingResult validationResult, ModelMap model) {
+  public String postAddTodo(@ModelAttribute("newTodo") @Valid Todo todo, BindingResult validationResult,
+      ModelMap model) {
 
     if (validationResult.hasErrors()) {
       validationResult.getAllErrors().forEach(e -> {
@@ -66,12 +68,11 @@ public class TodoController {
       });
 
       System.out.println("desc: " + todo.getDescription());
-      
+
       return "addTodo";
     }
 
-    todoService.addTodo(
-        model.get("name").toString(), todo.getDescription(), LocalDate.now().plusYears(1), false);
+    todoService.addTodo(model.get("name").toString(), todo.getDescription(), LocalDate.now().plusYears(1), false);
 
     return "redirect:list-todos";
   }
@@ -79,6 +80,29 @@ public class TodoController {
   @RequestMapping("delete-todo")
   public String deleteTodo(@RequestParam int id) {
     todoService.deleteById(id);
+
+    return "redirect:list-todos";
+  }
+
+  @RequestMapping(value = "update-todo", method = RequestMethod.GET)
+  public String getUpdateTodo(@RequestParam int id, ModelMap model) {
+    Todo todo = todoService.findById(id);
+    model.addAttribute("newTodo", todo);
+
+    return "addTodo";
+  }
+
+  @RequestMapping(value = "update-todo", method = RequestMethod.POST)
+  public String updateTodo(@ModelAttribute("newTodo") @Valid Todo todo,
+      BindingResult validationResult, ModelMap model) {
+    if (validationResult.hasErrors()) {
+      return "addTodo";
+    }
+
+    System.out.println("updated desc: " + todo.getDescription());
+
+    // todo.setUsername(model.get("name").toString());
+    todoService.updateTodo(todo);
 
     return "redirect:list-todos";
   }
