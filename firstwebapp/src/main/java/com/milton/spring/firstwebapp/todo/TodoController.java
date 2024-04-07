@@ -2,6 +2,8 @@ package com.milton.spring.firstwebapp.todo;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder; 
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -29,8 +31,9 @@ public class TodoController {
 
   @RequestMapping("list-todos")
   public String listAllTodos(ModelMap model) {
-    List<Todo> todos = todoService.findByUsername("milton");
-    model.addAttribute("todos", todos);
+    String username = getLoggedInUsername(model);
+    List<Todo> todos = todoService.findByUsername(username);
+		model.addAttribute("todos", todos);
 
     return "listTodos";
   }
@@ -38,7 +41,7 @@ public class TodoController {
   // GET
   @RequestMapping(value = "add-todo", method = RequestMethod.GET)
   public String getAddTodo(ModelMap model) {
-    String username = (String) model.get("name"); // from session
+    String username = getLoggedInUsername(model);
     Todo todo = new Todo(0, username, "", LocalDate.now().plusYears(1), false);
     model.put("newTodo", todo); /* 2-way binding */
     return "addTodo";
@@ -56,14 +59,15 @@ public class TodoController {
    * showing-the-errors
    */
   @RequestMapping(value = "add-todo", method = RequestMethod.POST)
-  public String postAddTodo(@ModelAttribute("newTodo") @Valid Todo todo, 
+  public String postAddTodo(@ModelAttribute("newTodo") @Valid Todo todo,
       BindingResult validationResult, ModelMap model) {
 
     if (validationResult.hasErrors()) {
       validationResult.getAllErrors().forEach(e -> {
         if (e instanceof FieldError) {
           FieldError fieldErr = ((FieldError) e);
-          System.out.println("field: " + fieldErr.getField() + ", err: " + fieldErr.getDefaultMessage());
+          System.out.println("field: " + fieldErr.getField() + ", err: "
+              + fieldErr.getDefaultMessage());
         }
       });
 
@@ -72,8 +76,8 @@ public class TodoController {
       return "addTodo";
     }
 
-    todoService.addTodo(
-        model.get("name").toString(), todo.getDescription(), todo.getTargetDate(), false);
+    todoService.addTodo(getLoggedInUsername(model), todo.getDescription(),
+        todo.getTargetDate(), false);
 
     return "redirect:list-todos";
   }
@@ -100,10 +104,18 @@ public class TodoController {
       return "addTodo";
     }
 
-    System.out.println("updated desc: " + todo.getDescription() + ", date: "+ todo.getTargetDate());
+    System.out.println("updated desc: " + todo.getDescription() + ", date: "
+        + todo.getTargetDate());
 
     todoService.updateTodo(todo);
 
     return "redirect:list-todos";
   }
+
+	private String getLoggedInUsername(ModelMap model) {
+		Authentication authentication = 
+				SecurityContextHolder.getContext().getAuthentication();
+		return authentication.getName();
+	}
+
 }
