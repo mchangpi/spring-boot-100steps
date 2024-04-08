@@ -12,31 +12,32 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class SpringSecurityConfiguration {
-	//LDAP or Database
-	//In Memory 
-	
-	//InMemoryUserDetailsManager
-	//InMemoryUserDetailsManager(UserDetails... users)
-	
-	@Bean
-	public InMemoryUserDetailsManager createUserDetailsManager() {
-		
-		Function<String, String> encoder
-				= input -> passwordEncoder().encode(input);
-		
-		UserDetails userDetails = User.builder()
-									.passwordEncoder(encoder)
-									.username("milton")
-									.password("milton")
-									.roles("USER","ADMIN")
-									.build();
-		
-		return new InMemoryUserDetailsManager(userDetails);
-	}
+  // LDAP or Database
+  // In Memory
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
+  // InMemoryUserDetailsManager
+  // InMemoryUserDetailsManager(UserDetails... users)
+
+  @Bean
+  public InMemoryUserDetailsManager createUserDetailsManager() {
+    UserDetails userDetails1 = createNewUser("milton", "milton");
+    UserDetails userDetails2 = createNewUser("test", "test");
+
+    return new InMemoryUserDetailsManager(userDetails1, userDetails2);
+  }
+
+  private UserDetails createNewUser(String username, String password) {
+    Function<String, String> encoder = input -> passwordEncoder().encode(input);
+
+    UserDetails userDetails = User.builder().passwordEncoder(encoder)
+        .username(username).password(password).roles("USER", "ADMIN").build();
+
+    return userDetails;
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
 }
