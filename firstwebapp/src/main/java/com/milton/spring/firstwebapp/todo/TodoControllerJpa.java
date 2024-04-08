@@ -21,15 +21,11 @@ import jakarta.validation.Valid;
 @SessionAttributes("name")
 public class TodoControllerJpa {
 
-  private TodoService todoService;
-
   private TodoRepository todoRepository;
 
   // constructor injection
-  public TodoControllerJpa(TodoService todoService,
-      TodoRepository todoRepository) {
+  public TodoControllerJpa(TodoRepository todoRepository) {
     super();
-    this.todoService = todoService;
     this.todoRepository = todoRepository;
   }
 
@@ -67,43 +63,39 @@ public class TodoControllerJpa {
       BindingResult validationResult, ModelMap model) {
 
     if (validationResult.hasErrors()) {
-      validationResult.getAllErrors().forEach(e -> {
-        if (e instanceof FieldError) {
-          FieldError fieldErr = ((FieldError) e);
-          System.out.println("field: " + fieldErr.getField() + ", err: "
-              + fieldErr.getDefaultMessage());
-        }
-      });
-
       System.out.println("desc: " + todo.getDescription());
 
       return "addTodo";
     }
 
-    todoService.addTodo(getLoggedInUsername(model), todo.getDescription(),
-        todo.getTargetDate(), false);
+    String username = getLoggedInUsername(model);
+    todo.setUsername(username);
+    todoRepository.save(todo);
 
     return "redirect:list-todos";
   }
 
   @RequestMapping("delete-todo")
   public String deleteTodo(@RequestParam int id) {
-    todoService.deleteById(id);
+    todoRepository.deleteById(id);
 
     return "redirect:list-todos";
   }
 
   @RequestMapping(value = "update-todo", method = RequestMethod.GET)
   public String getUpdateTodo(@RequestParam int id, ModelMap model) {
-    Todo todo = todoService.findById(id);
-    model.addAttribute("newTodo", todo);
+    Todo todo = todoRepository.findById(id).get();
+
+    if (todo != null) {
+      model.addAttribute("newTodo", todo);
+    }
 
     return "addTodo";
   }
 
   @RequestMapping(value = "update-todo", method = RequestMethod.POST)
   public String updateTodo(@ModelAttribute("newTodo") @Valid Todo todo,
-      BindingResult validationResult) {
+      BindingResult validationResult, ModelMap model) {
     if (validationResult.hasErrors()) {
       return "addTodo";
     }
@@ -111,7 +103,8 @@ public class TodoControllerJpa {
     System.out.println("updated desc: " + todo.getDescription() + ", date: "
         + todo.getTargetDate());
 
-    todoService.updateTodo(todo);
+    todo.setUsername(getLoggedInUsername(model));
+    todoRepository.save(todo);
 
     return "redirect:list-todos";
   }

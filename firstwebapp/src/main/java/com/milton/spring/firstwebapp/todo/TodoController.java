@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.validation.Valid;
 
-// @Controller // for backup, we would use TodoControllerJpa
+// @Controller // we would use TodoControllerJpa instead
 @SessionAttributes("name")
 public class TodoController {
 
