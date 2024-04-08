@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
 
-@Service
+@Service // we would use TodoControllerJpa instead
 public class TodoService {
 
   private static final List<Todo> todos = new ArrayList<>();
