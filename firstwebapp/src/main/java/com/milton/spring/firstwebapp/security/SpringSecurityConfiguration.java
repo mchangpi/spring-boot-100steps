@@ -1,14 +1,19 @@
 package com.milton.spring.firstwebapp.security;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import java.util.function.Function;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SpringSecurityConfiguration {
@@ -38,6 +43,23 @@ public class SpringSecurityConfiguration {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+  
+  // All URLs are protected, login form is shown for unauthorized requests
+  // To use H2 console, disable protections for CSRF/Frames
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    
+    http.authorizeHttpRequests(
+        auth -> auth.anyRequest().authenticated());
+    http.formLogin(withDefaults());
+    
+    // disable protection for cross site request forgery 
+    http.csrf().disable();
+    // disable protection for <frame> and <iframe>
+    http.headers().frameOptions().disable();
+    
+    return http.build();
   }
 
 }
