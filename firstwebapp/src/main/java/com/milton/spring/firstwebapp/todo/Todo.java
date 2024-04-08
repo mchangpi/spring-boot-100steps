@@ -2,10 +2,16 @@ package com.milton.spring.firstwebapp.todo;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Size;
 
+@Entity /* map to a database table */
 public class Todo {
 
+  @Id
+  @GeneratedValue
   private int id;
   private String username;
   
