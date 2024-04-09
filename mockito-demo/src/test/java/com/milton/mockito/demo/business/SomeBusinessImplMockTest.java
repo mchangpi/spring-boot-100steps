@@ -15,17 +15,18 @@ class SomeBusinessImplMockTest {
   @Mock
   private DataService dataServiceMock;
   
+  @InjectMocks
+  private SomeBusinessImpl businessImpl;
+  
   @Test
   void findTheGreatestFromAllData_basicScenario() {
     when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{25, 15, 5});
-    SomeBusinessImpl businessImpl = new SomeBusinessImpl(dataServiceMock);
     assertEquals(25, businessImpl.findTheGreatestFromAllData());
   }
   
   @Test
   void findTheGreatestFromAllData_OneValue() {
     when(dataServiceMock.retrieveAllData()).thenReturn(new int[]{35});
-    SomeBusinessImpl businessImpl = new SomeBusinessImpl(dataServiceMock);
     assertEquals(35, businessImpl.findTheGreatestFromAllData());
   }
 
