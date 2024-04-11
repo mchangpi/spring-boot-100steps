@@ -2,7 +2,9 @@ package com.milton.springboot.restapi.survey;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -55,6 +57,36 @@ public class SurveyService {
      * + survey.toString());
      */
     return survey;
+  }
+
+  public List<Question> retrieveAllSurveyQuestions(String surveyId) {
+    Survey survey = retrieveSurveyById(surveyId);
+
+    if (survey == null) {
+      // return null;
+      return Collections.<Question>emptyList();
+    }
+
+    return survey.getQuestions();
+  }
+
+  public Question retrieveSpecificSurveyQuestion(String surveyId,
+      String questionId) {
+
+    List<Question> surveyQuestions = retrieveAllSurveyQuestions(surveyId);
+
+    if (surveyQuestions == null) {
+      return new Question();
+    }
+    
+    Optional<Question> optionalQuestion = surveyQuestions.stream()
+        .filter(q -> q.getId().equalsIgnoreCase(questionId)).findFirst();
+
+    if (optionalQuestion.isEmpty()) {
+      return new Question();
+    }
+
+    return optionalQuestion.orElseGet(() -> new Question());
   }
 
 }

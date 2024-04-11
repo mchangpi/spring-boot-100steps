@@ -24,7 +24,7 @@ public class SurveyResource {
     return surveyService.retrieveAllSurveys();
   }
 
-  // try: http://localhost.8080/surveys/survey1
+  // http://localhost.8080/surveys/survey1
 
   @RequestMapping("/surveys/{surveyId}")
   public Survey retrieveSurveyById(@PathVariable String surveyId) {
@@ -33,5 +33,33 @@ public class SurveyResource {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
     return survey;
+  }
+
+  // http://localhost:8080/surveys/survey1/questions
+
+  @RequestMapping("/surveys/{surveyId}/questions")
+  public List<Question> retrieveAllSurveyQuestions(
+      @PathVariable String surveyId) {
+    List<Question> questions = surveyService
+        .retrieveAllSurveyQuestions(surveyId);
+
+    if (questions == null)
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+    return questions;
+  }
+
+  // http://localhost:8080/surveys/survey1/questions/question1
+
+  @RequestMapping("/surveys/{surveyId}/questions/{questionId}")
+  public Question retrieveSpecificSurveyQuestion(@PathVariable String surveyId,
+      @PathVariable String questionId) {
+    Question question = surveyService.retrieveSpecificSurveyQuestion(surveyId,
+        questionId);
+
+    if (question == null)
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+    return question;
   }
 }
