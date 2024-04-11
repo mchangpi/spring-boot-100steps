@@ -80,7 +80,7 @@ public class SurveyService {
     if (surveyQuestions == null) {
       return new Question();
     }
-    
+
     Optional<Question> optionalQuestion = surveyQuestions.stream()
         .filter(q -> q.getId().equalsIgnoreCase(questionId)).findFirst();
 
@@ -102,5 +102,21 @@ public class SurveyService {
     SecureRandom secureRandom = new SecureRandom();
     String randomId = new BigInteger(32, secureRandom).toString();
     return randomId;
+  }
+
+  public String deleteSurveyQuestion(String surveyId, String questionId) {
+    List<Question> surveyQuestions = retrieveAllSurveyQuestions(surveyId);
+
+    if (surveyQuestions == null)
+      return "-1";
+
+    Predicate<? super Question> predicate = q -> q.getId()
+        .equalsIgnoreCase(questionId);
+    boolean removed = surveyQuestions.removeIf(predicate);
+
+    if (!removed)
+      return "-1";
+
+    return questionId;
   }
 }

@@ -68,16 +68,10 @@ public class SurveyResource {
     return question;
   }
 
-  // POST
   /*
-   * http://localhost:8080/surveys/survey1/questions
-    
-    { 
-      "id": "SOME_ID", 
-      "description": "Your Favorite Cloud Platform",
-      "options": [ "AWS", "Azure", "Google Cloud", "Oracle Cloud" ],
-      "correctAnswer": "Google Cloud" 
-    }
+   * POST http://localhost:8080/surveys/survey1/questions { "id": "SOME_ID",
+   * "description": "Your Favorite Cloud Platform", "options": [ "AWS", "Azure",
+   * "Google Cloud", "Oracle Cloud" ], "correctAnswer": "Google Cloud" }
    */
   @RequestMapping(value = "/surveys/{surveyId}/questions", method = RequestMethod.POST)
   public ResponseEntity<Object> addNewSurveyQuestion(
@@ -95,4 +89,14 @@ public class SurveyResource {
 
     return ResponseEntity.created(location).build();
   }
+
+  @RequestMapping(value = "/surveys/{surveyId}/questions/{questionId}", 
+      method = RequestMethod.DELETE)
+  public ResponseEntity<Object> deleteSurveyQuestion(
+      @PathVariable String surveyId, @PathVariable String questionId) {
+    surveyService.deleteSurveyQuestion(surveyId, questionId);
+
+    return ResponseEntity.noContent().build();
+  }
+
 }
