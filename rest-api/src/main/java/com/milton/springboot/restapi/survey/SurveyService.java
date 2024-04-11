@@ -119,4 +119,22 @@ public class SurveyService {
 
     return questionId;
   }
+
+  public void updateSurveyQuestion(String surveyId, String questionId,
+      Question updateQuestion) {
+    List<Question> questions = retrieveAllSurveyQuestions(surveyId);
+
+    for (int i = 0; i < questions.size(); i++) {
+      if (questions.get(i).getId().equalsIgnoreCase(updateQuestion.getId())) {
+        questions.set(i, updateQuestion);
+        System.out.println("found: " + questions.get(i).getId());
+        break;
+      }
+    }
+    /*
+     * questions.removeIf(q -> q.getId().equalsIgnoreCase(questionId));
+     * questions.add(question);
+     */
+  }
+
 }
