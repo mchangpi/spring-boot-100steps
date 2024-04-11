@@ -37,6 +37,10 @@ public class Question {
   public String getCorrectAnswer() {
     return correctAnswer;
   }
+  
+  public void setId(String id) {
+    this.id = id;
+  }
 
   @Override
   public String toString() {
