@@ -13,6 +13,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -22,9 +23,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-//SurveyResource
 @WebMvcTest(controllers = SurveyResource.class)
-class SurveyResourceTest {
+// the security filters are NOT registered with MockMVC 
+@AutoConfigureMockMvc(addFilters = false)
+class SurveyResourceMockTest {
 
   @MockBean
   private SurveyService surveyService;
