@@ -27,9 +27,9 @@ public class UserDetailsCommandLineRunner implements CommandLineRunner {
     
     //List<UserDetails> users = repository.findAll();
     
-    List<UserDetails> users = repository.findByRole("Admin");
+    //List<UserDetails> users = repository.findByRole("Admin");
     
-    users.forEach(user -> logger.info("admin: " + user.toString()));
+    //users.forEach(user -> logger.info("admin: " + user.toString()));
     
   }
 
