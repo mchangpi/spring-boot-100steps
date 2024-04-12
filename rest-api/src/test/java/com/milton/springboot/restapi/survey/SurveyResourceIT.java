@@ -53,12 +53,14 @@ public class SurveyResourceIT {
         }
         """;
 
-    // JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false);
-    // assertEquals(expectedResponse.trim(), responseEntity.getBody());
+    JSONAssert.assertEquals(expectedResponse, responseEntity.getBody(), false);
+    
+    /*
+    assertEquals(expectedResponse.trim(), responseEntity.getBody());
     System.out.println("headers: " + responseEntity.getHeaders());
     System.out.println();
     System.out.println("body: " + responseEntity.getBody());
-
+    */
   }
 
 }
