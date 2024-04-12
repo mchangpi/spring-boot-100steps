@@ -38,7 +38,7 @@ class SurveyResourceTest {
   private static String GENERIC_QUESTION_URL = 
       "http://localhost:8080/surveys/Survey1/questions";
 
-  @Test
+  // @Test
   void retrieveSpecificSurveyQuestion_404Scenario() throws Exception {
     RequestBuilder requestBuilder = MockMvcRequestBuilders
         .get(SPECIFIC_QUESTION_URL).accept(MediaType.APPLICATION_JSON);
@@ -49,7 +49,7 @@ class SurveyResourceTest {
     assertEquals(404, mvcResult.getResponse().getStatus());
   }
 
-  // @Test
+  @Test
   void retrieveSpecificSurveyQuestion_basicScenario() throws Exception {
     RequestBuilder requestBuilder = MockMvcRequestBuilders
         .get(SPECIFIC_QUESTION_URL).accept(MediaType.APPLICATION_JSON);
@@ -80,7 +80,6 @@ class SurveyResourceTest {
     assertEquals(200, response.getStatus());
     JSONAssert.assertEquals(expectedResponse, response.getContentAsString(),
         false);
-
   }
 
   // @Test
