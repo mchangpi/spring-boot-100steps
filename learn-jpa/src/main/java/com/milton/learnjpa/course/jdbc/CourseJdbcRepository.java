@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.milton.learnjpa.course.Course;
 
-@Repository
+// @Repository
 public class CourseJdbcRepository {
 
   @Autowired
