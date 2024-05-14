@@ -19,23 +19,25 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.validation.Valid;
 
-//@Controller
+@Controller
 @SessionAttributes("name")
-public class ToDoController {
+public class ToDoJpaController {
   
   private Logger logger = LoggerFactory.getLogger(getClass());
-  private ToDoService toDoService;
+  private ToDoRepository toDoRepository;
   
   @Autowired
-  public ToDoController(ToDoService toDoService) {
+  public ToDoJpaController(ToDoRepository toDoRepository) {
     super();
-    this.toDoService = toDoService;
+    this.toDoRepository = toDoRepository;
   }
 
-  @RequestMapping("listtodos")
+  @RequestMapping(value={"", "/", "listtodos"})
   public String listAllToDos(ModelMap model){
-    List<ToDo> toDos = toDoService.findByUsername(getLoggedinUsername());
+    List<ToDo> toDos = toDoRepository.findByUsername(getLoggedInUsername());
+    toDos.sort((t1, t2) -> t1.getId() - t2.getId());
     model.addAttribute("toDos", toDos);
+    model.put("name", getLoggedInUsername());
     return "listToDos";
   }
 
@@ -48,44 +50,42 @@ public class ToDoController {
 
   @RequestMapping(value = "addtodo", method = RequestMethod.POST)
   public String addToDo(ModelMap model, @Valid ToDo toDo, BindingResult result) {
-    
     if(result.hasErrors()) {
       return "addToDo";
     }
+
+    toDo.setUsername(getLoggedInUsername());
+    toDoRepository.save(toDo);
     
-    toDoService.addToDo((String) model.get("name"), 
-        toDo.getDescription(), toDo.getTargetDate(), false);
     return "redirect:listtodos";
   }
 
   @RequestMapping(value = "updatetodo", method = RequestMethod.GET)
   public String showUpdateToDo(@RequestParam int id, ModelMap model) {
-    ToDo toDo = toDoService.findById(id); 
+    ToDo toDo = toDoRepository.findById(id).get(); 
     model.addAttribute("toDo", toDo);
     return "addToDo";
   }
 
   @RequestMapping(value = "updatetodo", method = RequestMethod.POST)
   public String updateToDo(ModelMap model, @Valid ToDo toDo, BindingResult result) {
-
     if(result.hasErrors()) {
       return "addToDo";
     }
-    toDo.setUsername((String) model.get("name"));
-    toDoService.updateToDo(toDo); 
-    
-    logger.info((String)model.get("name"));
+    toDo.setUsername(getLoggedInUsername());
+    toDoRepository.save(toDo);
+
     logger.info(toDo.toString());
     return "redirect:listtodos";
   }
 
   @RequestMapping("deletetodo")
   public String deleteToDo(@RequestParam int id){
-    toDoService.deleteById(id);
+    toDoRepository.deleteById(id);
     return "redirect:listtodos";
   }
 
-  private String getLoggedinUsername() {
+  private String getLoggedInUsername() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     return auth.getName();
   }

@@ -1,3 +1,4 @@
+//package com.miltontest.springboot.miltonfirstwebapp.todo;
 package com.milton.spring.firstwebapp.todo;
 
 import java.time.LocalDate;
@@ -5,54 +6,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.Valid;
 
-// @Service // we would use TodoRepository instead
-public class TodoService {
-
-  private static final List<Todo> todos = new ArrayList<>();
-
-  private static int todosCount = 0;
-
+@Service
+public class ToDoService {
+  
+  private Logger logger = LoggerFactory.getLogger(getClass());
+  private static List<ToDo> toDos = new ArrayList<ToDo>();
+  
+  private static int toDosCount = 0; 
+  
   static {
-    todos.add(new Todo(++todosCount, "milton", "Get AWS Certified",
-        LocalDate.now().plusYears(1), false));
-    todos.add(new Todo(++todosCount, "milton", "Learn DevOps",
-        LocalDate.now().plusYears(2), false));
-    todos.add(new Todo(++todosCount, "milton", "Learn Full Stack Development",
-        LocalDate.now().plusYears(3), false));
+    toDos.add(new ToDo(++toDosCount, "milton", "Learn AWS", LocalDate.now().plusYears(1), false));
+    toDos.add(new ToDo(++toDosCount, "milton", "Learn DevOps", LocalDate.now().plusYears(2), false));
+    toDos.add(new ToDo(++toDosCount, "milton", "Learn DDD", LocalDate.now().plusYears(3), false));
   }
 
-  public List<Todo> findByUsername(String username) {
-    Predicate<? super Todo> predicate = todo -> todo.getUsername()
-        .equalsIgnoreCase(username);
-
-    return todos.stream().filter(predicate).toList();
+  public List<ToDo> findByUsername(String username){
+    Predicate<? super ToDo> checkToDoUserName = todo -> todo.getUsername().equalsIgnoreCase(username);
+    return toDos.stream().filter(checkToDoUserName).toList();
   }
-
-  public void addTodo(String username, String description, LocalDate targetDate,
-      boolean done) {
-    Todo todo = new Todo(++todosCount, username, description, targetDate, done);
-    todos.add(todo);
+  
+  public void addToDo(String username, String description, LocalDate targetDate, boolean done) {
+    ToDo toDo = new ToDo(++toDosCount, username, description, targetDate, done);
+    toDos.add(toDo);
   }
-
+  
+  public ToDo findById(int id) {
+    Predicate<? super ToDo> checkToDoId = todo -> todo.getId() == id;
+    return toDos.stream().filter(checkToDoId).findFirst().get();
+  }
+  
+  public void updateToDo(@Valid ToDo toDo) {
+    logger.info("index " + toDo.getId());
+    for(int i = 0; i < toDos.size(); i++){
+      if(toDos.get(i).getId() == toDo.getId()) {
+        toDos.set(i, toDo);
+        break;
+      }
+    }
+  }
+  
   public void deleteById(int id) {
-    Predicate<? super Todo> predicate = todo -> todo.getId() == id;
-    todos.removeIf(predicate);
-  }
-
-  public Todo findById(int id) {
-    Predicate<? super Todo> predicate = todo -> todo.getId() == id;
-    Todo todo = todos.stream().filter(predicate).findFirst().get();
-    return todo;
-  }
-
-  public void updateTodo(@Valid Todo updateTodo) {
-    todos.stream().filter(t -> t.getId() == updateTodo.getId()).forEach(t -> {
-      t.setDescription(updateTodo.getDescription());
-      t.setTargetDate(updateTodo.getTargetDate());
-    });
+    Predicate<? super ToDo> checkToDoId = todo -> todo.getId() == id;
+    toDos.removeIf(checkToDoId);
   }
 }
